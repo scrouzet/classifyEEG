@@ -21,14 +21,13 @@ Using it with another classification toolbox than LIBLINEAR would only require a
 - function to add selectivity bar on top of a decoding accuracy curve
 
 # Information about example data
-One single participant in a go/nogo binary classification task.
+One single participant in a go/nogo binary classification task (1 = target; 2 = distractor).
 
-Code:
-1 = target - human face images
-2 = distractor - animal face images
-
-Here, Y is directly loaded from the example_data.mat, one way to get it from a cell array of labels {'A' 'A' 'B' 'B'} to idx [1 1 2 2] is to do:
-Y = grp2idx(mycellarray);
+Here, Y is directly loaded from the example_data.mat, one way to get it from a cell array of labels is:
+    mycellarray = {'A' 'A' 'B' 'B'}; 
+    Y = grp2idx(mycellarray);
+    Y =
+     [1 1 2 2]
 
 # BRIEF TUTORIAL
 
