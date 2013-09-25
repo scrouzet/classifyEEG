@@ -25,7 +25,7 @@ One single participant in a go/nogo binary classification task (1 = target; 2 = 
 
 Here, Y is directly loaded from the example_data.mat, one way to get it from a cell array of labels is:
 
-```
+```matlab
 mycellarray = {'A' 'A' 'B' 'B'}; 
 Y = grp2idx(mycellarray);
 Y =
