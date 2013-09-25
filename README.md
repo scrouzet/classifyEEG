@@ -1,7 +1,7 @@
 A set of MATLAB functions to perform classification based upon topographic EEG data.
 
 This code is primarily designed for:
-- time course analysis of time-locked information (generally to stimulus onset).  
+- time course analysis of time-locked EEG signal (generally to stimulus onset).  
 - data preprocessed with EEGLAB (should be straighforward to use with Fieldtrip data).
 
 Dependencies:
