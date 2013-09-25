@@ -24,10 +24,13 @@ Using it with another classification toolbox than LIBLINEAR would only require a
 One single participant in a go/nogo binary classification task (1 = target; 2 = distractor).
 
 Here, Y is directly loaded from the example_data.mat, one way to get it from a cell array of labels is:
-    mycellarray = {'A' 'A' 'B' 'B'}; 
-    Y = grp2idx(mycellarray);
-    Y =
-     [1 1 2 2]
+
+```
+mycellarray = {'A' 'A' 'B' 'B'}; 
+Y = grp2idx(mycellarray);
+Y =
+  [1 1 2 2]
+```
 
 # BRIEF TUTORIAL
 
