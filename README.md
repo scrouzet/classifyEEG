@@ -11,14 +11,14 @@ Dependencies:
 Using it with another classification toolbox than LIBLINEAR would only require a few modifications in the classification.m function.
 
 # TODO LIST:
-- example script to check that sufficient number of training example
+- []example script to check that sufficient number of training example
 	decoding accuracy function of nb of training example
-- finish the tutorial
-- function to determine
-	- minimal decoding latency
-	- best decoding latency
-- include the computing of shuffled labels
-- function to add selectivity bar on top of a decoding accuracy curve
+- []finish the tutorial
+- []function to determine
+	- []minimal decoding latency
+	- []best decoding latency
+- [] include the computing of shuffled labels
+- []function to add selectivity bar on top of a decoding accuracy curve
 
 # Information about example data
 One single participant in a go/nogo binary classification task (1 = target; 2 = distractor).
