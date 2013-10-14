@@ -1,4 +1,6 @@
 % Example script to perform topography classification on EEGlab data
+%
+% seb.crouzet@gmail.com
 
 % Add dependencies to the MATLAB path
 addpath(genpath('~/Dropbox/src/MATLAB/liblinear-1.93/'));
@@ -14,7 +16,7 @@ X = EEG.data;
 % Parameters --------------------------------------------------------------
 res.ncv = 20;              % number of cross-validation to perform
 res.training_ratio = 0.9;  % percentage of examples used for training the model
-res.regularization = 'L1'; % type of regularization 'L1' or 'L2'
+res.type = 7; % type of regularization 'L1' or 'L2'
 res.optimization = 'off';  % opimization 'on' or 'off'
 
 res = classif_res_init(X,Y,res); % initialize structure for results
@@ -34,14 +36,15 @@ for t = 1:res.n_time % loop over time-points
         [Xn(itrain,:), Xn(itest,:)] = normalizeTrainTest(Xo(itrain,:), Xo(itest,:),'scale');
         
         % Do the classification
-        [res.predicted_label(itest,t,cv), res.accuracy(:,t,cv), res.prob_estimates(itest,t,cv), res.weights(:,t,cv), res.best_lambda(t,cv)] = ...
-            classification(Xn(itrain,:), Xn(itest,:), Y(itrain), Y(itest), res.regularization, res.optimization);
+        [res.predicted_label(itest,t,cv), res.stats(t,cv), res.prob_estimates(itest,t,cv), res.weights(:,t,cv), res.best_lambda(t,cv)] = ...
+            classification(Xn(itrain,:), Xn(itest,:), Y(itrain), Y(itest), res.type, res.optimization);
         
         % Store additional infos
+        res.accuracy(t,cv)      = res.stats(t,cv).accuracy(1);
         res.trainingset(:,t,cv) = itrain;
         res.testset(:,t,cv)     = itest;
     end
-    fprintf(1,'Processed time point %d / %d: %f%%\n', t, res.n_time, nanmean(res.accuracy(1,t,:)));
+    fprintf(1,'Processed time point %d / %d: %f%%\n', t, res.n_time, nanmean(res.accuracy(t,:)));
 end
 
 save('example_results.mat','res');

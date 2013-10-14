@@ -1,117 +1,66 @@
-function [predicted_label,accuracy,prob_estimates,weights,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,regularization,optimization)
-%function [YlatTr,YlatTest,B_new,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,regularization,optimization)
-% classification() - run the classification of something
-%
-% Only logistic regression is used because this is the only one to allow
-% for meaningful interpretation of probability_estimates.
+function [predicted_label,accuracy,prob_estimates,weights,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,type,optimization)
+% function [YlatTr,YlatTest,B_new,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,type,optimization)
+% Wrapper for the whole classification process
 % 
 % Example usage: 
-% [YlatTr,YlatTest,B_new,best_lambda] = classification(Xtrain, Xtest, Ytrain, Ytest, 'L2', 'off');
+% [predicted_label,accuracy,prob_estimates,weights,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,'7','off')
 %
-% -------------------------------------------------------------------------
 % Inputs:
-%   Xtrain         = matrix of data for training (Trials*features)
-%   Xtest          = matrix of data for testing (Trials*features)
-%   Ytrain         = vector of train labels (Trials)
-%   Ytest          = vector of test labels (Trials)
-%   regularization = name of the regularization type to use ('L1' or 'L2')
-%   optimization   = optimize the constraint parameter on the training set ('on' or 'off')
+%   Xtrain       = matrix of data for training (Trials*features)
+%   Xtest        = matrix of data for testing (Trials*features)
+%   Ytrain       = vector of train labels (Trials)
+%   Ytest        = vector of test labels (Trials)
+%   type         = name of the type type to use ('L1' or 'L2')
+%   optimization = optimize the constraint parameter on the training set ('on' or 'off')
 %
-% -------------------------------------------------------------------------
 % Outputs:
-%   YlatTr         = colon vector of decimal value predicted by the
-%                     algorithm for training set, to get the predicted value
-%                     sign(YlatTr) (Trials)
-%   YlatTest       = colon vector of decimal value predicted by the
-%                     algorithm for test set, to get the predicted value
-%                     sign(YlatTest) (Trials)
-%   B_new          = weights (features)
-%   best_lambda    = best constraint parameter get by optimization (x)
-% -------------------------------------------------------------------------
+%   predicted_label = vector of categorical labels
+%   accuracy        = vector of 3 values (the 1st one is the accuracy)
+%   prob_estimates  = vector of continuous values -> distance from decision boundary for each instance
+%   weights         = weights associated with each dimension (i.e. feature)
+%   best_lambda     = best constraint parameter get by optimization (x)
 % 
+% Recommendations:
+% - Only logistic regression (type = 6 or 7) should be used when probability_estimates need to be interpreted
+%
 % Author: seb.crouzet@gmail.com
 %
-% LIBLINEAR Usage
-% ===============
+% =========================================================================
+% LIBLINEAR Usage (see the toolbox for more detailled information)
+% =========================================================================
 % 
-% matlab> model = train(training_label_vector, training_instance_matrix [,'liblinear_options', 'col']);
-% 
-%         -training_label_vector:
-%             An m by 1 vector of training labels. (type must be double)
-%         -training_instance_matrix:
-%             An m by n matrix of m training instances with n features.
-%             It must be a sparse matrix. (type must be double)
-%         -liblinear_options:
-%             A string of training options in the same format as that of LIBLINEAR.
-%         -col:
-%             if 'col' is set, each column of training_instance_matrix is a data instance. Otherwise each row is a data instance.
-% 
-% matlab> [predicted_label, accuracy, decision_values/prob_estimates] = predict(testing_label_vector, testing_instance_matrix, model [, 'liblinear_options', 'col']);
-% 
-%         -testing_label_vector:
-%             An m by 1 vector of prediction labels. If labels of test
-%             data are unknown, simply use any random values. (type must be double)
-%         -testing_instance_matrix:
-%             An m by n matrix of m testing instances with n features.
-%             It must be a sparse matrix. (type must be double)
-%         -model:
-%             The output of train.
-%         -liblinear_options:
-%             A string of testing options in the same format as that of LIBLINEAR.
-%         -col:
-%             if 'col' is set, each column of testing_instance_matrix is a data instance. Otherwise each row is a data instance.
-% 
-%
-% 	liblinear_options:
+% model = train(training_label_vector, training_instance_matrix [,'liblinear_options', 'col']);
 % 	-s type : set type of solver (default 1) for multi-class classification
-% 		 0 -- L2-regularized logistic regression (primal)\n"
-% 		 1 -- L2-regularized L2-loss support vector classification (dual)\n"	
-% 		 2 -- L2-regularized L2-loss support vector classification (primal)\n"
-% 		 3 -- L2-regularized L1-loss support vector classification (dual)\n"
-% 		 4 -- support vector classification by Crammer and Singer\n"
-% 		 5 -- L1-regularized L2-loss support vector classification\n"
-% 		 6 -- L1-regularized logistic regression\n"
-% 		 7 -- L2-regularized logistic regression (dual)\n"
-% 	  for regression\n"
-% 		11 -- L2-regularized L2-loss support vector regression (primal)\n"
-% 		12 -- L2-regularized L2-loss support vector regression (dual)\n"
-% 		13 -- L2-regularized L1-loss support vector regression (dual)\n"
-% 	-c cost : set the parameter C (default 1)\n"
-% 	-p epsilon : set the epsilon in loss function of SVR (default 0.1)\n"
-% 	-e epsilon : set tolerance of termination criterion\n"
-% 		-s 0 and 2\n" 
-% 			|f'(w)|_2 <= eps*min(pos,neg)/l*|f'(w0)|_2,\n" 
-% 			where f is the primal function and pos/neg are # of\n" 
-% 			positive/negative data (default 0.01)\n"
-% 		-s 11\n"
-% 			|f'(w)|_2 <= eps*|f'(w0)|_2 (default 0.001)\n" 
-% 		-s 1, 3, 4 and 7\n"
-% 			Dual maximal violation <= eps; similar to libsvm (default 0.1)\n"
-% 		-s 5 and 6\n"
-% 			|f'(w)|_1 <= eps*min(pos,neg)/l*|f'(w0)|_1,\n"
-% 			where f is the primal function (default 0.01)\n"
-% 		-s 12 and 13\n"
-% 			|f'(alpha)|_1 <= eps |f'(alpha0)|,\n"
-% 			where f is the dual function (default 0.1)\n"
-% 	-B bias : if bias >= 0, instance x becomes [x; bias]; if < 0, no bias term added (default -1)\n"
-% 	-wi weight: weights adjust the parameter C of different classes (see README for details)\n"
-% 	-v n: n-fold cross validation mode\n"
-% 	-q : quiet mode (no outputs)\n"
+% 		 0 -- L2-regularized logistic regression (primal)
+% 		 1 -- L2-regularized L2-loss support vector classification (dual)	
+% 		 2 -- L2-regularized L2-loss support vector classification (primal)
+% 		 3 -- L2-regularized L1-loss support vector classification (dual)
+% 		 4 -- support vector classification by Crammer and Singer
+% 		 5 -- L1-regularized L2-loss support vector classification
+% 		 6 -- L1-regularized logistic regression
+% 		 7 -- L2-regularized logistic regression (dual)
+% 	  
+%     for regression
+% 		11 -- L2-regularized L2-loss support vector regression (primal)
+% 		12 -- L2-regularized L2-loss support vector regression (dual)
+% 		13 -- L2-regularized L1-loss support vector regression (dual)
+% 
+% 	-c cost : set the parameter C (default 1)
 
 %==========================================================================
 %                           Initializations
 %==========================================================================
 
-B_init = [];
-
 % Add bias at the end
 %-------------------
-Xtrain      = [Xtrain ones(size(Xtrain,1),1)];
-Xtest       = [Xtest ones(size(Xtest,1),1)];
+%Xtrain      = [Xtrain ones(size(Xtrain,1),1)];
+%Xtest       = [Xtest ones(size(Xtest,1),1)];
 
 % Make sure that Y is a column vector
 if isrow(Ytrain), Ytrain = Ytrain'; end
 if isrow(Ytest),  Ytest  = Ytest'; end
+
+if ~ischar(type), type = num2str(type); end
 
 %==========================================================================
 %                           Classification
@@ -121,56 +70,54 @@ if isrow(Ytest),  Ytest  = Ytest'; end
 %----------------
 if ~strcmp(optimization,'off')
     
-    [best_lambda B_init] = parameterSearch(Xtrain,Ytrain,classifier);
+    [best_lambda] = parameterSearch(Xtrain,Ytrain,classifier);
 else
     best_lambda = 1;
 end
 
 % Classification
 %----------------
-%[YlatTr,YlatTest,B_new]= classif(Xtrain,Xtest,Ytrain,Ytest,regularization,best_lambda,B_init);
-[predicted_label,accuracy,prob_estimates,weights]= classif(Xtrain,Xtest,Ytrain,Ytest,regularization,best_lambda,B_init);
+[predicted_label,accuracy,prob_estimates,weights]= classif(Xtrain,Xtest,Ytrain,Ytest,type,best_lambda);
 
 end
 
 
 
 
-function [predicted_label,accuracy,prob_estimates,weights]= classif(Xtrain,Xtest,Ytrain,Ytest,regularization,best_lambda,B_init)
-%function [YlatTr,YlatTest,B_new]= classif(Xtrain,Xtest,Ytrain,Ytest,regularization,best_lambda,B_init)
+function [predicted_label,accuracy,prob_estimates,weights]= classif(Xtrain,Xtest,Ytrain,Ytest,type,best_lambda)
 % perform classification
 
-switch regularization       
-    case 'L2'
-        model = train(Ytrain, sparse(double(Xtrain)), ['-s 7 -q -c ', num2str(best_lambda)]);
-    case 'L1'
-        model = train(Ytrain, sparse(double(Xtrain)), ['-s 6 -q -c ', num2str(best_lambda)]);
-end
+model = train(Ytrain, sparse(double(Xtrain)), ['-s ' type ' -q -c ', num2str(best_lambda)]);
 
-% Handle libSVM and liblinear "bug" - the B_new values can be sometimes reversed (see libSVM FAQ)
 labels = unique(Ytrain);
+% binary classification
+% Handle libSVM and liblinear "bug" - the B_new values can be sometimes reversed (see libSVM FAQ)
+%if length(labels)==2
 if Ytrain(1) == labels(1);
-    B_new = -model.w';
+    weights = -model.w';
 elseif Ytrain(1) == labels(2);
-    B_new = model.w';
+    weights = model.w';
 end
+% multiclass    
+%elseif length(labels) > 2
+%    weights = model.w';
+%end
 
-% Value predicted
-%YlatTr              = Xtrain*B_new;
-%YlatTest            = Xtest*B_new;
-weights = B_new(1:end-1); % remove the bias to have clean weights
+%weights = B_new(1:end-1); % remove the bias to have clean weights
 
 [predicted_label, accuracy, prob_estimates] = predict(Ytest, sparse(double(Xtest)), model, 'b -1');
 
+%YlatTr   = Xtrain*B_new;
+% prob_estimates = Xtest*B_new;
+
 end
 
 
 
-function [best_lambda B_init] = parameterSearch(Xtrain,Ytrain,regularization)
-% ptraining = percentage of trial kept for training during the C optimization
-% seb.crouzet@gmail.com
+function [best_lambda] = parameterSearch(Xtrain,Ytrain,type)
+%  NEEDS UPDATE - DOES NOT WORK ANYMORE
+% search for the best C parameter (cost)
 
-B_init      = [];
 ptraining = 0.5;
 ntraining = round((size(Xtrain,1)*ptraining)/2);
 nfold = 8; % if 8 labs are open, there are thus done all at once (8 labs on the cluster)
@@ -197,7 +144,7 @@ for pas = grain
                 train = cat(1, train, j(t(1:ntraining)));
             end
             test = setdiff(1:size(Ytrain,1), train)';
-            [~,YlatTest,~] = classif(Xtrain(train,:),Xtrain(test,:),Ytrain(train),Ytrain(test),regularization,2^log2c,B_init);
+            [~,YlatTest,~] = classif(Xtrain(train,:),Xtrain(test,:),Ytrain(train),Ytrain(test),type,2^log2c);
             perf = measure_perf(YlatTest,Ytrain(test));
             foldPerf(f) = perf.accuracy;
         end

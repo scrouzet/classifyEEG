@@ -8,16 +8,16 @@ figure;
 dec_acc    = mean(res.accuracy(1,:,:),3);
 dec_acc_ci = bootci(200, @mean, squeeze(res.accuracy(1,:,:))');
 
+% plot chance level
+plot(EEG.times, repmat(50,1,length(EEG.times)), 'k--'); hold on
 % plot CI of the average across CV
 fill([EEG.times fliplr(EEG.times) ], [ dec_acc_ci(1,:) fliplr(dec_acc_ci(2,:)) ], [0.5 0.5 0.5], 'EdgeColor', 'none', 'FaceAlpha', 0.5); hold on
 % plot average across CV
 plot(EEG.times, dec_acc, 'Color', 'k'); hold on
-%    p_masked = double(sigtestClassifEEG(res(z).classif.accuracy(:,:,1), res(z).classif.accuracy_rand(:,:,1), alpha, nsucc, 'ttest_randlabel'));
-%    plot(times(p_masked),repmat(ysig(1),length(times(p_masked)),1),'s','MarkerEdgeColor','none','MarkerFaceColor',mycolors(1,:), 'MarkerSize',4); hold on
-%    p_masked(p_masked==0)=NaN;
-%    plot(times,repmat(ysig(1),1,length(times)).*p_masked,'-','Color', mycolors(1,:), 'LineWidth', 3); hold on
 xlabel('Time (ms)')
 ylabel('Decoding accuracy (%)');
+xlim([-100 700]);
+ylim([40 100]);
 
 
 % -------------------------------------------------------------------------

@@ -19,19 +19,11 @@ function [perf]=measure_perf(Ypredict,Yreal)
 
 % probablility of positive class
 %-----------------------------
-probaPos       = 1./(1+exp(-Ypredict(:)));
-perf.probaPos  = probaPos;
 
+Yreal    = makeYconsistent(Yreal);
+Ypredict = makeYconsistent(Ypredict);
 
-% if labels are 0 and 1, transform to -1 and 1
-if all(unique(Yreal)==[0;1])
-    Yreal(Yreal==0)=-1;
-end
-perf.Yreal= Yreal;
-
-% Convert in 1/-1
-%----------------
-Ypredict = sign(Ypredict);
+perf.Yreal    = Yreal;
 perf.Ypredict = Ypredict;
 
 % Compute perf
