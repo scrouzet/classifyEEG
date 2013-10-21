@@ -11,6 +11,7 @@ This code is primarily designed for:
 Using it with another classification toolbox than [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/) would only require a few modifications in the classification.m function.
 
 Fan, R., Chang, K., & Hsieh, C. (2008). LIBLINEAR: A library for large linear classification. The Journal of Machine Learning Research, 9(2008), 1871–1874
+
 Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of single-trial EEG dynamics. Journal of Neuroscience Methods 134:9-21
 
 ### Installation
@@ -23,19 +24,14 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 - example script to check that sufficient number of training example - decoding accuracy function of nb of training example
 - sliding_stats() function to determine 
 	- time point when it's significantly above chance level
-	- minimal and best decoding latencies
+	- minimal (onset) and best (peak) decoding latencies
 - include the computing of shuffled labels
 - function to add selectivity bar on top of a decoding accuracy curve
 - decide for the label idx (1 vs 0, 1 vs -1, 1 vs 2). For the moment the code works only for 1vs2
 - function to plot ROC from the classif results
 - finish the tutorial
 - averaging trials (taking groups of 3 trials could allow to get 20% more accuracy \cite{Isik2013})
-
-function slidingClassif_stat() to extract:
-- peak latency (=max decoding)
-- onset latency (to define)
-
-Temporal cross-decoding = neural template -> train and test on all possible combination of time-points
+- Temporal cross-decoding = neural template -> train and test on all possible combination of time-points
 
 ## Sliding-time-window analysis
 A new classifier was trained and tested for each time point. This sliding time window approach was used to study the emerging categorical structure of object
