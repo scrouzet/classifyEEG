@@ -22,23 +22,23 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 
 # TODO LIST:
 - example script to check that sufficient number of training example - decoding accuracy function of nb of training example
-- sliding_stats() function to determine 
-	- time point when it's significantly above chance level
-	- minimal (onset) and best (peak) decoding latencies
-- include the computing of shuffled labels
 - function to add selectivity bar on top of a decoding accuracy curve
 - decide for the label idx (1 vs 0, 1 vs -1, 1 vs 2). For the moment the code works only for 1vs2
 - function to plot ROC from the classif results
 - finish the tutorial
 - averaging trials (taking groups of 3 trials could allow to get 20% more accuracy \cite{Isik2013})
 - Temporal cross-decoding = neural template -> train and test on all possible combination of time-points
+- function to estimate SRN per electrode, tranform the data accordingly to 
 
 ## Sliding-time-window analysis
 A new classifier was trained and tested for each time point. This sliding time window approach was used to study the emerging categorical structure of object
 representations.
 
 ## sliding vs. global classification
-sliding is over time
+sliding : is over time (default when there is a time dimension)
+static  : same as sliding but less the time dimension (default when there is no time dimension)
+
+global  : take into account the whole ERP (not planned to be implemented here)
 
 ## Pattern classification analysis
 The aim of the study was to examine when and how categorical structure emerges in the brain. To this end, we used naive Bayes implementation of linear discriminant analysis (LDA, Duda, Hart, & Stork, 2001) to do single-trial classification of the exemplar and category of the stimuli that participants were viewing.
@@ -55,6 +55,17 @@ Y = grp2idx(mycellarray);
 Y =
   [1 1 2 2]
 ```
+
+# Improving the SNR (signal-to-noise ratio) of EEG  measurement
+In every EEG measurement, there is noise.
+
+## "Downsampling" the number of trials 
+In ERP measurements, the most typical approach is to average several trials together. This process has also been used in decoding of MEG signal (Isik et al., 2013, J. Neurophysiology). The number of epochs that needs to be averaged can vary depending on the experiment and setup. They showed that in their case, 3 trials together was already optimal to improve the decoding performance. 
+
+In  the  time averaging of evoked potentials it is assumed that the measured stochastic signal x(t) is the sum  of  actual  signal  s(t)  and  additive  stochastic  noise  n(t).  If  the  noise  samples  are uncorrelated, the amplitude SNR increases proportionally to square root of the number of averaged epochs. This additive model might only be valid under anaesthesia and for short latency evoked potentials. For longer latencies, the assumption of additive noise has been shown to be insufficient and more complex models are needed (Lopes da Silva 2005).
+
+## "Downsampling" the number of electrodes 
+The multichannel aspect of EEG can also be used to increase SNR. It is possible that the desired signal is correlated over several electrodes in a multichannel measurement, whereas the noise is not. In such as case, spatially averaging the signals measured with adjacent electrodes, the multichannel EEG measurement can be downsampled, for example, from a 64 to a 16 electrodes system measurement. In the downsampled multichannel measurement, the SNR is higher than if the measurements had originally been conducted with the 16 electrodes system.
 
 # BRIEF TUTORIAL
 
