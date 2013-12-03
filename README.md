@@ -1,8 +1,16 @@
-This is a set of MATLAB functions to perform classification based upon topographic EEG data.
+This is a set of MATLAB functions to perform multivariate analysis (only classification for now) based upon topographic EEG data.
 
-This code is primarily designed for:
+The code provided here is primarily designed for:
 - time course analysis of time-locked electroencephalographic (EEG) signal.
 - data preprocessed with [EEGLAB](http://sccn.ucsd.edu/eeglab/) (easy to also use with [Fieldtrip](http://fieldtrip.fcdonders.nl/) data).
+
+### What does multivariate analysis means?
+These kind of tools can usually also be refered to as pattern recognition, MVPA (MultiVariate Pattern Analysis) or decoding. More generally, multivariate analyses can usually be divided in two types (definitions from the scikit-learn website):
+- classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
+- regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
+
+### Why using multivariate analysis with EEG recordings?
+blabla
 
 ### Dependencies:
 - [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/): compiled and added to the MATLAB path
@@ -67,15 +75,12 @@ In  the  time averaging of evoked potentials it is assumed that the measured sto
 ## "Downsampling" the number of electrodes 
 The multichannel aspect of EEG can also be used to increase SNR. It is possible that the desired signal is correlated over several electrodes in a multichannel measurement, whereas the noise is not. In such as case, spatially averaging the signals measured with adjacent electrodes, the multichannel EEG measurement can be downsampled, for example, from a 64 to a 16 electrodes system measurement. In the downsampled multichannel measurement, the SNR is higher than if the measurements had originally been conducted with the 16 electrodes system.
 
+## Alternative method: smart average of trials for training by clustering
+To be programmed and explained.
+
+
+
 # BRIEF TUTORIAL
-
-From scikit-learn webpage:
-classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
-
-regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
-
-
-
 LIBLINEAR's solvers all give similar performances, but their training time may be different. 
 
 For current solvers for L2-regularized problems, a rough guideline is in Table 1. We recommend users:
