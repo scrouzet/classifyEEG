@@ -35,7 +35,7 @@ switch method
         
         sigtime = mymean > myci(2,:);
         
-        sigtime = selectivitySuccessiveBins(sigtime, nsucc);
+        sigtime = cluster_correction_time(sigtime, nsucc);
 
         
     case 'ttest_randlabel'
