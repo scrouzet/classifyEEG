@@ -32,7 +32,7 @@ imagesc(cvmatrix);
 % -------------------------------------------------------------------------
 % plot_weight_topo()
 figure;
-addpath(genpath('~/Dropbox/src/MATLAB/eeglab12_0_2_1b'));
+addpath(genpath('~/Dropbox/src/MATLAB/eeglab13_2_2b'));
 weights = abs(mean(res.weights,3));           % average weights across cross-validations
 time2plot = find(dec_acc == max(dec_acc), 1); % choose the time-point to plot (here the max decoding accuracy)
 topoplot(weights(:,time2plot), EEG.chanlocs, 'style', 'both'); % 'both' or 'fill' are nice

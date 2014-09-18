@@ -4,7 +4,6 @@
 
 % Add dependencies to the MATLAB path
 addpath(genpath('~/Dropbox/src/MATLAB/liblinear-1.93/'));
-addpath(genpath('~/Dropbox/src/MATLAB/eeglab13_2_2b'));
 
 % Load the data
 load('example_data.mat');
