@@ -1,5 +1,7 @@
 function [predicted_label,accuracy,prob_estimates,weights,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,type,optimization)
-% function [YlatTr,YlatTest,B_new,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,type,optimization)
+% YOU SHOULD NOT USE THIS FUNCTION (legacy) but rather use mvpa_train() and mvpa_test().
+%
+%function [YlatTr,YlatTest,B_new,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,type,optimization)
 % Wrapper for the whole classification process
 % 
 % Example usage: 

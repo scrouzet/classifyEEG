@@ -1,35 +1,21 @@
-function [sigtime] = selectivitySuccessiveBins(sigtime, n)
+function [sigtime] = cluster_correction_time(sigtime, n)
 % assess bins in time when significant differences are stable for n consecutive bins
+% This function is based on a trick using strfind() which has revealed to
+% be the fastest/more practical way to do it.
 %
 % Input:
 %   sigtime: vector of 0s and 1s
-%   n: number of consecutive 1s required
+%   n: number of consecutive 1s required (size of the island of 1s)
+% 
+% Output:
+%   sigtime: vector of 0s and 1s containing only the n-sized island of 1s
 %
 % seb.crouzet@gmail.com
 
-for t = 1:length(sigtime)
-     
-    % special case for the beginning of the vector
-    if t < n
-        if sigtime(t) == 1
-            if sum(sigtime(t:t+n)) < n
-                sigtime(t) = 0;
-            end
-        end
-        
-    % special case for the end of the vector
-    elseif t > length(sigtime)-n
-        if sigtime(t) == 1
-            if sum(sigtime(t-n:t)) < n
-                sigtime(t) = 0;
-            end
-        end
-        
-    % regular case
-    elseif sigtime(t) == 1
-        if sum(sigtime(t-(n-1):t+(n-1))) < n
-            sigtime(t) = 0;
-        end
-    end
-  
+startIndex = strfind(sigtime, ones(1,n));
+
+sigtime = zeros(1,length(sigtime));
+if ~isempty(startIndex)
+    indices = unique( bsxfun(@plus, startIndex', 0:n-1) )';
+    sigtime(indices) = 1;
 end

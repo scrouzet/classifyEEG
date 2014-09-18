@@ -19,21 +19,20 @@ end
 % -------------------------------------------------------------------------
 % Initialize the result matrices with nans
 
-%if length(labels)==2 % binary classification
 res.predicted_label = nan(res.n_instance, res.n_time, res.ncv);
-res.accuracy        = nan(3, res.n_time, res.ncv);
-res.prob_estimates  = nan(res.n_instance, res.n_time, res.ncv);
-res.weights         = nan(res.n_features, res.n_time, res.ncv);
+res.true_label      = nan(res.n_instance, res.n_time, res.ncv);
+res.accuracy        = nan(res.n_time, res.ncv);
+res.accuracy_rand   = nan(res.n_time, res.ncv);
+
+if res.n_class==2 % binary classification
+    res.prob_estimates  = nan(res.n_instance, res.n_time, res.ncv);
+    res.weights         = nan(res.n_features, res.n_time, res.ncv);
+elseif res.n_class>2 % multiclass
+    res.prob_estimates  = nan(res.n_instance, res.n_class, res.n_time, res.ncv);
+    res.weights         = nan(res.n_features, res.n_class, res.n_time, res.ncv);
+end
+
 res.best_lambda     = nan(res.n_time, res.ncv);
 res.itrain          = false(res.n_instance, res.ncv); % logical array
 res.itest           = false(res.n_instance, res.ncv); % logical array
-res.accuracy_rand   = nan(3, res.n_time, res.ncv);
 
-% elseif length(labels) > 2 % multiclass
-%     res.predicted_label = nan(res.n_instance, res.n_time, res.ncv);
-%     res.prob_estimates  = nan(res.n_instance, res.n_class, res.n_time, res.ncv);
-%     res.weights         = nan(res.n_features, res.n_class, res.n_time, res.ncv);
-%     res.best_lambda     = nan(res.n_time, res.ncv);
-%     res.itrain          = false(res.n_instance, res.ncv); % logical array
-%     res.itest           = false(res.n_instance, res.ncv); % logical array
-% end

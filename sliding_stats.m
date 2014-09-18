@@ -20,7 +20,12 @@ function [sigtime, decoding_onset, decoding_peak] = sliding_stats(data1, data2, 
 switch method
 
 	case 'one>pop'
-	case 'pop>one'
+	case 'group>chance'
+        mymean = mean(data1,1);
+        myci   = bootci(200,@mean,data1);
+        sigtime = myci(1,:) > 50;
+        sigtime = cluster_correction_time(sigtime, nsucc);
+        
 	case 'pop>pop'
     
     case 'mean_over_chance_distrib' % STILL A DRAFT
@@ -49,7 +54,6 @@ switch method
         
         % check for nsucc in a row
         sigtime = cluster_correction_time(h,nsucc);
-        
         
 %     case 'pop>popfrombaseline' %  METHOD CHANCE BASELINE FROM TRIAL BASELINE
 %         % rather than requiring the computation of a chance distribution, this one is here taken 

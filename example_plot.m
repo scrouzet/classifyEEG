@@ -5,8 +5,8 @@ load('example_results.mat');
 % -------------------------------------------------------------------------
 % plot classification accuracy over time
 figure;
-dec_acc    = mean(res.accuracy(1,:,:),3);
-dec_acc_ci = bootci(200, @mean, squeeze(res.accuracy(1,:,:))');
+dec_acc    = mean(res.accuracy,2);
+dec_acc_ci = bootci(200, @mean, squeeze(res.accuracy(:,:))');
 
 % plot chance level
 plot(EEG.times, repmat(50,1,length(EEG.times)), 'k--'); hold on
@@ -23,10 +23,10 @@ ylim([40 100]);
 % -------------------------------------------------------------------------
 % plot cross-validation matrix
 figure;
-cvmatrix = zeros(size(res.itrain)); % not used in white
-cvmatrix(res.itrain) = -1;          % train in blue
+cvmatrix = zeros(size(res.itrain)); % not used in blue
+cvmatrix(res.itrain) = -1;          % train in green
 cvmatrix(res.itest)  = 1;           % test in red
-imagesc(cvmatrix); polarmap;
+imagesc(cvmatrix);
 
 
 % -------------------------------------------------------------------------
@@ -35,4 +35,4 @@ figure;
 addpath(genpath('~/Dropbox/src/MATLAB/eeglab12_0_2_1b'));
 weights = abs(mean(res.weights,3));           % average weights across cross-validations
 time2plot = find(dec_acc == max(dec_acc), 1); % choose the time-point to plot (here the max decoding accuracy)
-topoplot(weights(:,time2plot), EEG.chanlocs, 'style', 'both', 'colormap', polarmap); % 'both' or 'fill' are nice
+topoplot(weights(:,time2plot), EEG.chanlocs, 'style', 'both'); % 'both' or 'fill' are nice
