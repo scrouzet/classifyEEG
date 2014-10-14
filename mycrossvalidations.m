@@ -1,8 +1,10 @@
 function[res] = mycrossvalidations(Y, res)
-% Create cross-validations
-% make sure that there is an equivalent number of training examples for
-% each class. Idem for test examples. This is not impletemented in built-in
-% matlab functions.
+% Create cross-validations indices.
+% 
+% Make sure that there is an equivalent number of training examples for
+% each class. Idem for test examples. 
+% This is not impletemented (as far as I understood) in built-in MATLAB
+% functions.
 %
 % http://en.wikipedia.org/wiki/Cross-validation_(statistics)
 %
@@ -13,15 +15,16 @@ switch res.cv_type
     
     case 'holdout' 
     	% also called: Monte Carlo cross-validation (MCCV) ; Repeated random sub-sampling validation
-    	% Xu & Liang (2001) Monte Carlo cross validation. Chemometrics and Intelligent Laboratory Systems. 56-1(1–11)
+    	% Xu & Liang (2001) Monte Carlo cross validation. Chemometrics and Intelligent Laboratory Systems.
         % 
         % On each cv, get a random sample for training and the rest for testing
         % - different training set have overlaping members, so the error bar
         % is not well defined statistically
         % - it's not neither boostrap since it draws without replacement
         %
-        % Zhang, P. (1993). Model Selection Via Muiltfold Cross Validation. Ann. Stat. 21 299–313
-        % showed that running N^2 (with N=number of data points) provide an estimate as good as all combinations possible
+        % Zhang, P. (1993). Model Selection Via Multifold Cross Validation. Ann. Stat.
+        % They showed that running N^2 (with N=number of data points) provide an 
+        % estimate as good as all combinations possible
         
         if ~isfield(res,'ncv'), error('For houldout cv, the field res.ncv should be specified.'); end
         if ~isfield(res,'training_ratio'), error('For houldout cv, the field res.training_ratio should be specified.'); end
@@ -42,10 +45,7 @@ switch res.cv_type
         end
         
         
-        
-        
-        
-    case 'kfold' %%%%% NOT FINISHED
+    case 'kfold'
     	% k-fold cross-validation
         % Split all the data in n folds. Train on n-1, test on the remainings
         % ncv = nfold
@@ -54,26 +54,24 @@ switch res.cv_type
         
         if ~isfield(res,'ncv'), error('For kfold cv, the field res.ncv should be specified (= nfold).'); end
         
-        % equalize the number of instance of each class in Y
+        % Equalize the number of instance of each class in Y
         Y_equal = nan(length(Y),1); 
         for class = 1:res.n_class
             Y_equal( randsample(find(Y==class), res.n_min) ) = class;
         end
         Y = Y_equal;
         
-%         for class = 1:res.n_class
-%             instances = reshape(find(Y==class);
-%         end
-%         
-        
-        c = cvpartition(Y,'kfold',res.ncv);        
+        % Now we can use the built-in MATLAB function to do it.
+        % I disable this specific warning because this is indeed what we
+        % want to do here.
+        warning('off','stats:cvpartition:MissingGroupsRemoved')
+        c = cvpartition(Y_equal,'kfold',res.ncv);        
+        warning('on','stats:cvpartition:MissingGroupsRemoved')
         for cv = 1:res.ncv
             res.itrain(training(c,cv), cv) = true;
             res.itest(test(c,cv), cv)      = true;
         end
-        
-        
-        
+           
         
     case 'leaveoneout'
         % get one instance (=trial) for test, and train on the rest
