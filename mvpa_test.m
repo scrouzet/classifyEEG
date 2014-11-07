@@ -1,15 +1,15 @@
-function [perf, predicted_label, prob_estimates]= mvpa_test(Xtest,Ytest,model,measure)
+function [perf, predicted_label, prob_estimates]= mvpa_test(Xtest,Ytest,model,toolbox,measure)
 
 % Example usage:
-% [predicted_label,accuracy,prob_estimates,weights,best_lambda]= classification(Xtrain,Xtest,Ytrain,Ytest,'7','off')
+% [accuracy,predicted_label,prob_estimates]= mvpa_test(Xtest,Xtrain,model,'libsvm','accuracy')
 %
 % Inputs:
 %   Xtest        = matrix of data for testing (Trials*features)
 %   Ytest        = vector of test labels (Trials)
 %
 % Outputs:
+%   perf            = the performance measurement. Can be accuracy, dprime (takes longer) or AUC (takes much longer)
 %   predicted_label = vector of categorical labels
-%   accuracy        = vector of 3 values (the 1st one is the accuracy)
 %   prob_estimates  = vector of continuous values -> distance from decision boundary for each instance
 %
 % Author: seb.crouzet@gmail.com
@@ -17,7 +17,12 @@ function [perf, predicted_label, prob_estimates]= mvpa_test(Xtest,Ytest,model,me
 % Make sure that Y is a column vector
 if isrow(Ytest),  Ytest  = Ytest'; end
 
-[predicted_label, accuracy, prob_estimates] = predict(Ytest, sparse(double(Xtest)), model);
+switch toolbox
+    case 'liblinear'
+        [predicted_label, accuracy, prob_estimates] = predict(Ytest, sparse(double(Xtest)), model);
+    case 'libsvm'
+        [predicted_label, accuracy, prob_estimates] = svmpredict(Ytest, Xtest, model);
+end
 
 % compute the prob estimates myself (I had issues with those given by liblinear)
 prob_estimates = 1./(1+exp(-prob_estimates));
@@ -27,7 +32,7 @@ switch measure
     case 'accuracy'
         perf = accuracy(1);
         
-    case 'dprime'        
+    case 'dprime'
         % Evaluate performance
         TP = sum(predicted_label(Ytest == 1) == 1);
         FN = sum(predicted_label(Ytest == 1) == 2);
