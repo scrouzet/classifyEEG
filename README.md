@@ -4,19 +4,25 @@ The code provided here is primarily designed for:
 - time course analysis of time-locked electroencephalographic (EEG) signal.
 - data preprocessed with [EEGLAB](http://sccn.ucsd.edu/eeglab/) (easy to also use with [Fieldtrip](http://fieldtrip.fcdonders.nl/) data).
 
+I've used previous and current versions of this code in the following studies:
+Crouzet*, S. M., Busch*, N.A. & Ohla, K. (in press). Taste quality decoding parallels taste sensations. Current Biology
+Cauchoix*, M., Crouzet*, S. M., Fize, D., & Serre T. (submitted). Fast ventral stream neural activity enables rapid visual categorization.
+
+If you use it, please cite one of these.
+
 ### What does multivariate analysis means?
 These kind of tools can usually also be refered to as pattern recognition, MVPA (MultiVariate Pattern Analysis) or decoding. More generally, multivariate analyses can usually be divided in two types (definitions from the scikit-learn website):
 - classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
 - regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
 
 ### Why using multivariate analysis with EEG recordings?
-blabla
+Todo.
 
 ### Dependencies:
 - [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/): compiled and added to the MATLAB path
 - [EEGLAB](http://sccn.ucsd.edu/eeglab/): in the MATLAB path, but only used for plotting functions
 
-Using it with another classification toolbox than [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/) would only require a few modifications in the classification.m function.
+Using it with another classification toolbox than [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/) will only require minor modifications in the mvpa_train_.m and mvpa_test.m functions.
 
 Fan, R., Chang, K., & Hsieh, C. (2008). LIBLINEAR: A library for large linear classification. The Journal of Machine Learning Research, 9(2008), 1871–1874
 
@@ -33,23 +39,12 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 - function to add selectivity bar on top of a decoding accuracy curve
 - decide for the label idx (1 vs 0, 1 vs -1, 1 vs 2). For the moment the code works only for 1vs2
 - function to plot ROC from the classif results
-- finish the tutorial
-- averaging trials (taking groups of 3 trials could allow to get 20% more accuracy \cite{Isik2013})
+- write a proper tutorial
+- integrate trial averaging (taking groups of 3 trials could allow to get 20% more accuracy \cite{Isik2013})
 - Temporal cross-decoding = neural template -> train and test on all possible combination of time-points
-- function to estimate SRN per electrode, tranform the data accordingly to 
 
 ## Sliding-time-window analysis
-A new classifier was trained and tested for each time point. This sliding time window approach was used to study the emerging categorical structure of object
-representations.
-
-## sliding vs. global classification
-sliding : is over time (default when there is a time dimension)
-static  : same as sliding but less the time dimension (default when there is no time dimension)
-
-global  : take into account the whole ERP (not planned to be implemented here)
-
-## Pattern classification analysis
-The aim of the study was to examine when and how categorical structure emerges in the brain. To this end, we used naive Bayes implementation of linear discriminant analysis (LDA, Duda, Hart, & Stork, 2001) to do single-trial classification of the exemplar and category of the stimuli that participants were viewing.
+A new classifier is trained and tested for each time point. This sliding time window approach is used to study the emergence and time-course of categorical information in the signal.
 
 
 # Information about example data
@@ -65,7 +60,10 @@ Y =
 ```
 
 # Improving the SNR (signal-to-noise ratio) of EEG  measurement
-In every EEG measurement, there is noise.
+
+EEG measurements are very noisy. Could there be a way to improve that for classification purposes?
+
+The following potential solutions are not implemented yet.
 
 ## "Downsampling" the number of trials 
 In ERP measurements, the most typical approach is to average several trials together. This process has also been used in decoding of MEG signal (Isik et al., 2013, J. Neurophysiology). The number of epochs that needs to be averaged can vary depending on the experiment and setup. They showed that in their case, 3 trials together was already optimal to improve the decoding performance. 
@@ -75,12 +73,11 @@ In  the  time averaging of evoked potentials it is assumed that the measured sto
 ## "Downsampling" the number of electrodes 
 The multichannel aspect of EEG can also be used to increase SNR. It is possible that the desired signal is correlated over several electrodes in a multichannel measurement, whereas the noise is not. In such as case, spatially averaging the signals measured with adjacent electrodes, the multichannel EEG measurement can be downsampled, for example, from a 64 to a 16 electrodes system measurement. In the downsampled multichannel measurement, the SNR is higher than if the measurements had originally been conducted with the 16 electrodes system.
 
-## Alternative method: smart average of trials for training by clustering
-To be programmed and explained.
-
 
 
 # BRIEF TUTORIAL
+
+## From LIBLINEAR help
 LIBLINEAR's solvers all give similar performances, but their training time may be different. 
 
 For current solvers for L2-regularized problems, a rough guideline is in Table 1. We recommend users:
@@ -100,11 +97,7 @@ The function normalizeTrainTest() does that. A typical use would be:
 [Xtrain, Xtest] = normalizeTrainTest(Xtrain, Xtest, 'scale'); 
 ```
 
-## Parameter Selection
-For linear classification, the only parameter is C (cost). According to Fan et al. (2008), 
+## Parameter selection/optimization
+For linear classification, the only parameter is C (cost). It is good to always try different C values to be sure that classification performance does not change much. From my experience, the performance improvement with EEG or iEEG data is minimal, and the computing time cost is huge...
 
-It's still good to always try different C values to be sure that classification performance does not change much.
-
-Important to perform a "number of training example" investigation to be sure that our classification accuracy is meaningful (i.e. that our classifier is properly trained).
-
-A function to perform the cross-validation (random, k-fold, leave-one-out) automatically.
+A good thing to do would be to perform a "number of training example" investigation to be sure that our classification accuracy is meaningful (i.e. that our classifier is properly trained).
