@@ -14,6 +14,7 @@ X = EEG.data;
 
 % Parameters --------------------------------------------------------------
 res.ncv            = 20;         % number of cross-validation to perform
+res.toolbox        = 'liblinear';
 res.cv_type        = 'holdout';
 res.training_ratio = 0.9;        % percentage of examples used for training the model
 res.type           = 7;          % type of regularization 'L1' or 'L2'
@@ -37,7 +38,7 @@ for t = 1:res.n_time % loop over time-points
         [Xn(itrain,:), Xn(itest,:)] = normalizeTrainTest(Xo(itrain,:), Xo(itest,:),'scale');
         
         % TRAIN
-        model        = mvpa_train(Xn(itrain,:), Y(itrain), res.type, res.optimization);
+        model        = mvpa_train(Xn(itrain,:), Y(itrain), res.toolbox, res.type, res.optimization);
         model_chance = mvpa_train(shuffle(Xn(itrain,:)), shuffle(Y(itrain)), res.type, res.optimization);
         
         % TEST
