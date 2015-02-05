@@ -5,7 +5,9 @@ The code provided here is primarily designed for:
 - data preprocessed with [EEGLAB](http://sccn.ucsd.edu/eeglab/) (easy to also use with [Fieldtrip](http://fieldtrip.fcdonders.nl/) data).
 
 I've used previous and current versions of this code in the following studies:
+
 Crouzet*, S. M., Busch*, N.A. & Ohla, K. (in press). Taste quality decoding parallels taste sensations. Current Biology
+
 Cauchoix*, M., Crouzet*, S. M., Fize, D., & Serre T. (submitted). Fast ventral stream neural activity enables rapid visual categorization.
 
 If you use it, please cite one of these.
