@@ -76,29 +76,24 @@ switch res.cv_type
     case 'leaveoneout'
         % get one instance (=trial) for test, and train on the rest
         % the rest corresponding to the minimum number among the different labels
-        % does not give very stable estimate with EEG data...
+        % equalize the number of instances used for training
         
-        res.ncv = res.n_min;
-        
-        for class = 1:res.n_class
-            id4test = randsample(res.freq_table(class,2), res.n_min);
+        n_instance = sum(res.freq_table(:,2));
+        res.itrain = false(n_instance,n_instance);
+        res.itest  = false(n_instance,n_instance);
+                
+        for cv = 1:n_instance
+            % store the one for test
+            res.itest(cv, cv) = true;
             
-            for cv = 1:res.ncv
-                
-                % get all the relevant instances
-                instances = find(Y==class);
-                
-                % store the one for test
-                sel4test = instances(id4test(cv));
-                
-                % leave it out of instances to be picked for training
-                instances(id4test(cv)) = [];
-                
-                % pick up the train test among remainings
-                sel4train = randsample(instances, res.n_training_example);
-                
-                res.itrain(sel4train, cv) = true;
-                res.itest(sel4test, cv) = true;
+            mycount = tabulate( Y(~res.itest(:, cv)) ); % don't count test
+            n_min = min(mycount(:,2));
+
+            % pick up the train set among remainings
+            sel4train = [];
+            for class = 1:res.n_class
+                sel4train = [ sel4train ; randsample(find(Y==class & ~res.itest(:, cv)), n_min) ];
             end
+            res.itrain(sel4train, cv) = true;
         end
 end

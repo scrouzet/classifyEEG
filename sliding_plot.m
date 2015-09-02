@@ -1,4 +1,4 @@
-function[] = sliding_plot(mytimes, dec_acc, mycolor, dec_acc_ci)
+function[h] = sliding_plot(mytimes, dec_acc, mycolor, dec_acc_ci)
 % plot the classification performance over time: 
 % - fill for the CI
 % - line for the average across cv
@@ -11,7 +11,7 @@ end
 
 if ~isempty(dec_acc)
     % Plot average across CV
-    plot(mytimes, dec_acc, 'Color', mycolor); hold on
+    h = plot(mytimes, dec_acc, 'Color', mycolor); hold on
 end
 
 %    p_masked = double(sigtestClassifEEG(res(z).classif.accuracy(:,:,1), res(z).classif.accuracy_rand(:,:,1), alpha, nsucc, 'ttest_randlabel'));

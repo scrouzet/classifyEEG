@@ -1,4 +1,4 @@
-function [XtrainNorm,XtestNorm,param] =  normalizeTrainTest(Xtrain,Xtest,method,param)
+function [XtrainNorm,XtestNorm,param] =  mvpa_normalize(Xtrain,Xtest,method,param)
 % normalizeTrainTest() - normalize train and test sets based on the train set
 %
 % Usage:  [XtrainNorm,XtestNorm] = normalizeTrainTest(Xtrain,Xtest,'scale')

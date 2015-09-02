@@ -27,37 +27,37 @@ end
 
 if numel(size(X)) > 2 % we are in the EEG sliding analysis case
     
-    res.predicted_label = nan(res.n_instance, res.n_time, res.ncv);
-    res.true_label      = nan(res.n_instance, res.n_time, res.ncv);
-    res.accuracy        = nan(res.n_time, res.ncv);
-    res.accuracy_rand   = nan(res.n_time, res.ncv);
+    res.predicted_label = nan(res.n_instance, res.n_time, res.ncv, 'single');
+    res.true_label      = nan(res.n_instance, res.n_time, res.ncv, 'single');
+    res.accuracy        = nan(res.n_time, res.ncv, 'single');
+    res.accuracy_rand   = nan(res.n_time, res.ncv, 'single');
     
     if res.n_class==2 % binary classification
-        res.prob_estimates  = nan(res.n_instance, res.n_time, res.ncv);
-        res.weights         = nan(res.n_features, res.n_time, res.ncv);
+        res.prob_estimates  = nan(res.n_instance, res.n_time, res.ncv, 'single');
+        res.weights         = nan(res.n_features, res.n_time, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
-        res.prob_estimates  = nan(res.n_instance, res.n_class, res.n_time, res.ncv);
-        res.weights         = nan(res.n_features, res.n_class, res.n_time, res.ncv);
+        res.prob_estimates  = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
+        res.weights         = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
     end
     
-    res.best_lambda     = nan(res.n_time, res.ncv);
+    res.best_lambda     = nan(res.n_time, res.ncv, 'single');
     
 elseif numel(size(X)) == 2
     
-    res.predicted_label = nan(res.n_instance, res.ncv);
-    res.true_label      = nan(res.n_instance, res.ncv);
-    res.accuracy        = nan(1, res.ncv);
-    res.accuracy_rand   = nan(1, res.ncv);
+    res.predicted_label = nan(res.n_instance, res.ncv, 'single');
+    res.true_label      = nan(res.n_instance, res.ncv, 'single');
+    res.accuracy        = nan(1, res.ncv, 'single');
+    res.accuracy_rand   = nan(1, res.ncv, 'single');
     
     if res.n_class==2 % binary classification
-        res.prob_estimates  = nan(res.n_instance, res.ncv);
-        res.weights         = nan(res.n_features, res.ncv);
+        res.prob_estimates  = nan(res.n_instance, res.ncv, 'single');
+        res.weights         = nan(res.n_features, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
-        res.prob_estimates  = nan(res.n_instance, res.n_class, res.ncv);
-        res.weights         = nan(res.n_features, res.n_class, res.ncv);
+        res.prob_estimates  = nan(res.n_instance, res.n_class, res.ncv, 'single');
+        res.weights         = nan(res.n_features, res.n_class, res.ncv, 'single');
     end
     
-    res.best_lambda     = nan(1, res.ncv);
+    res.best_lambda     = nan(1, res.ncv, 'single');
 end
 
 % Initialiwze the CV matrices
