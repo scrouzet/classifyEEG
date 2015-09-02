@@ -3,7 +3,7 @@
 % seb.crouzet@gmail.com
 
 % Add dependencies to the MATLAB path
-addpath(genpath('~/Dropbox/src/MATLAB/liblinear-1.93/'));
+addpath(genpath('~/Dropbox/src/MATLAB/liblinear-1.96/'));
 
 % Load the data
 load('example_data.mat');
@@ -39,11 +39,11 @@ for t = 1:res.n_time % loop over time-points
         
         % TRAIN
         model        = mvpa_train(Xn(itrain,:), Y(itrain), res.toolbox, res.type, res.optimization);
-        model_chance = mvpa_train(shuffle(Xn(itrain,:)), shuffle(Y(itrain)), res.type, res.optimization);
+        model_chance = mvpa_train(shuffle(Xn(itrain,:)), shuffle(Y(itrain)), res.toolbox, res.type, res.optimization);
         
         % TEST
         [res.accuracy(t,cv), res.predicted_label(itest,t,cv), res.prob_estimates(itest,t,cv)] = ...
-            mvpa_test(Xn(itest,:), Y(itest), model, 'accuracy');
+            mvpa_test(Xn(itest,:), Y(itest), model, res.toolbox, 'accuracy');
         
         % save results
         res.weights(:,t,cv)      = model.w'; % store the weights
@@ -52,7 +52,7 @@ for t = 1:res.n_time % loop over time-points
         
         % TEST (chance level estimated from shuffle labels)
         [res.accuracy_chance(t,cv), res.predicted_label_chance(itest,t,cv), res.prob_estimates_chance(itest,:,t,cv)] = ...
-            mvpa_test(shuffle(Xn(itest,:)), res.true_label_chance(itest,t,cv), model_chance, 'accuracy');
+            mvpa_test(shuffle(Xn(itest,:)), res.true_label_chance(itest,t,cv), model_chance, res.toolbox, 'accuracy');
         
     end
     fprintf(1,'Processed time point %d / %d: %f%%\n', t, res.n_time, nanmean(res.accuracy(t,:)));
