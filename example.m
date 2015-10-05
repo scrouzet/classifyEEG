@@ -13,7 +13,7 @@ X = EEG.data;
 % Y is loaded directly from the mat file
 
 % Parameters --------------------------------------------------------------
-res.ncv            = 20;         % number of cross-validation to perform
+res.ncv            = 120;         % number of cross-validation to perform
 res.toolbox        = 'liblinear';
 res.cv_type        = 'holdout';
 res.training_ratio = 0.9;        % percentage of examples used for training the model

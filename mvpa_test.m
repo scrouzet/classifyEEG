@@ -53,8 +53,9 @@ switch measure
         % To use the Statistics Toolbox function
         %perf = dprime(pHit,pFA);
         
-    case 'AUC'
-        [~,~,~,perf] = perfcurve(Ytest,prob_estimates,1);
+    case 'auc'
+        perf = get_aroc(Ytest,prob_estimates);
+        %[~,~,~,perf] = perfcurve(Ytest,prob_estimates,1);
         
 end
 end
