@@ -57,6 +57,7 @@ topoplot(actpats(:,time2plot), EEG.chanlocs, 'style', 'both'); % 'both' or 'fill
 title(['Activation patterns at ' num2str(EEG.times(time2plot)) 'ms']);
 
 % -------------------------------------------------------------------------
-% Modified version of dec_topo() to explore topographies
+% Modified version of timtopo() to explore topographies of activation
+% patterns
 figure;
 dectopo(mean(res.actpat,3),EEG.chanlocs, dec_acc, 'limits', [EEG.times(1) EEG.times(end) 40 90]);
