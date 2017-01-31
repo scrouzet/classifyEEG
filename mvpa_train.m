@@ -53,6 +53,12 @@ switch toolbox
     case 'libsvm'
         model = svmtrain(Y, double(X), ['-s ' type ' -t 0 -q -c ', num2str(best_lambda)]); % -b 1 for prob estimates
         % we may need to also do the label re-ordering
+        
+%     case 'lda'
+%         model = fitcdiscr(X,Y);
+%     case 'mnrfit'
+%         [] = mnrfit(X,Y); % maybe try fitclinear()
+
 end
 
 

@@ -6,9 +6,9 @@ The code provided here is primarily designed for:
 
 I've used previous and current versions of this code in the following studies:
 
-Crouzet*, S. M., Busch*, N.A. & Ohla, K. (in press). Taste quality decoding parallels taste sensations. Current Biology
+Crouzet*, S.M., Busch*, N.A. & Ohla, K. (2015). Taste quality decoding parallels taste sensations. Current Biology, 25, 1-7.
 
-Cauchoix*, M., Crouzet*, S. M., Fize, D., & Serre T. (submitted). Fast ventral stream neural activity enables rapid visual categorization.
+Cauchoix*, M., Crouzet*, S.M., Fize, D., & Serre T. (2016). Fast ventral stream neural activity enables rapid visual categorization. NeuroImage, 125, 280-290. 
 
 If you use it, please cite one of these.
 
@@ -17,8 +17,6 @@ These kind of tools can usually also be refered to as pattern recognition, MVPA 
 - classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
 - regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
 
-### Why using multivariate analysis with EEG recordings?
-Todo.
 
 ### Dependencies:
 - [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/): compiled and added to the MATLAB path

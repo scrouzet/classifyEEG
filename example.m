@@ -13,11 +13,12 @@ X = EEG.data;
 % Y is loaded directly from the mat file
 
 % Parameters --------------------------------------------------------------
-res.ncv            = 120;         % number of cross-validation to perform
+res.ncv            = 40;         % number of cross-validation to perform
 res.toolbox        = 'liblinear';
 res.cv_type        = 'holdout';
-res.training_ratio = 0.9;        % percentage of examples used for training the model
+res.training_ratio = 0.8;        % percentage of examples used for training the model
 res.type           = 7;          % type of regularization 'L1' or 'L2'
+res.norm_scheme    = 'scale';
 res.optimization   = 'off';      % opimization 'on' or 'off'
 res.conditions     = unique(Y);
 
@@ -34,20 +35,28 @@ for t = 1:res.n_time % loop over time-points
         itrain = res.itrain(:,cv);
         itest  = res.itest(:,cv);
         
-        % X normalization (scale between 0 and 1 seems to be the more efficient)
-        [Xn(itrain,:), Xn(itest,:)] = normalizeTrainTest(Xo(itrain,:), Xo(itest,:),'scale');
+        % TRAIN -----------------------------------------------------------
         
-        % TRAIN
+        % normalize the training data (scale between 0 and 1 seems to be the most efficient)
+        [Xn(itrain,:), param] = mvpa_normalize(Xo(itrain,:), res.norm_scheme);
+        
+        % do the training
         model        = mvpa_train(Xn(itrain,:), Y(itrain), res.toolbox, res.type, res.optimization);
-        model_chance = mvpa_train(shuffle(Xn(itrain,:)), shuffle(Y(itrain)), res.toolbox, res.type, res.optimization);
+        model_chance = mvpa_train(shuffle(Xn    (itrain,:)), shuffle(Y(itrain)), res.toolbox, res.type, res.optimization);
         
-        % TEST
+        % save weights and activation patterns
+        res.weights(:,t,cv) = model.w'; % store the weights
+        res.actpat(:,t,cv)  = get_activation_patterns(Xn(itrain,:), model.w');
+
+        
+        % TEST ------------------------------------------------------------
+        Xn(itest,:) = mvpa_normalize(Xo(itest,:), res.norm_scheme, param);
+
         [res.accuracy(t,cv), res.predicted_label(itest,t,cv), res.prob_estimates(itest,t,cv)] = ...
             mvpa_test(Xn(itest,:), Y(itest), model, res.toolbox, 'accuracy');
         
         % save results
-        res.weights(:,t,cv)      = model.w'; % store the weights
-        res.true_label(itest,t,cv) = Y(itest); % store the true labels
+        res.true_label(itest,t,cv)        = Y(itest); % store the true labels
         res.true_label_chance(itest,t,cv) = shuffle(Y(itest)); % store the "true" labels for the ones selected for chance
         
         % TEST (chance level estimated from shuffle labels)

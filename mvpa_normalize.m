@@ -19,13 +19,17 @@ if exist('param','var') == 0 % param is not an input, this is usually the traini
     
     if strcmp(method,'zscore')
         
-        m = mean(X,1);
-        s = std(X,[],1);
+        mu     = mean(X,1);
+        sigma = std(X,[],1);
         
-        Xnorm = (X - repmat(m,size(X,1),1)) ./ repmat(s,size(X,1),1);
+        sigma0 = sigma;
+        sigma0(sigma0==0) = 1;
+        Xnorm = bsxfun(@minus, X, mu);
+        Xnorm = bsxfun(@rdivide, Xnorm, sigma0);
+%        Xnorm = (X - repmat(m,size(X,1),1)) ./ repmat(s,size(X,1),1);
         
-        param{2} = m;
-        param{3} = s;
+        param{2} = mu;
+        param{3} = sigma0;
         
     elseif strcmp(method,'scale')
         
@@ -46,16 +50,18 @@ if exist('param','var') == 0 % param is not an input, this is usually the traini
     % also remove nans, not sure why there is some sometimes
     Xnorm(isnan(Xnorm)) = 0;
     
-else % param is an input (Xtrain is not required)
+else % param is an input
     
     if strcmp(method,param{1})==0
         error('The normalization method asked is not the one that was used during training.')
     end
     
     if strcmp(method,'zscore')
-        m = param{2};
-        s = param{3};
-        Xnorm  = (X - repmat(m,size(X,1),1)) ./ repmat(s,size(X,1),1);
+        mu    = param{2};
+        sigma = param{3};
+        
+        Xnorm = bsxfun(@minus, X, mu);
+        Xnorm = bsxfun(@rdivide, Xnorm, sigma);
         
     elseif strcmp(method,'scale')
         minV  = param{2};
