@@ -22,14 +22,14 @@ switch toolbox
         [predicted_label, accuracy, prob_estimates] = predict(Ytest, sparse(double(Xtest)), model);
     case 'libsvm'
         [predicted_label, accuracy, prob_estimates] = svmpredict(Ytest, Xtest, model);
-    case 'lda'
-        
-    case 'mnrfit'
-        
+%     case 'lda'
+%         predict
 end
 
 % compute the prob estimates myself (I had issues with those given by liblinear)
 prob_estimates = 1./(1+exp(-prob_estimates));
+% Note: decision values are usually in the range [-1 1] so the sigmoid 
+% transform does not make them bimodal
 
 switch measure
     
@@ -66,6 +66,6 @@ end
 % prob_estimates are between 0 and 1
 % make them between -128 and 128 to store as int8 and save space
 %prob_estimates = uint8(255 * (1./(1+exp(-prob_estimates))));
-prob_estimates = int8(255 * prob_estimates - 255/2);
+%prob_estimates = int8(255 * prob_estimates - 255/2);
 
 end

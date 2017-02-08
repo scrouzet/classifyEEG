@@ -19,7 +19,8 @@ res.freq_table = tabulate(Y);
 res.n_min      = min(res.freq_table(:,2));
 
 if strcmp(res.cv_type,'leaveoneout')
-    res.ncv = res.n_min;
+    %res.ncv = res.n_min;
+    res.ncv = res.n_instance;
 end
 
 % -------------------------------------------------------------------------

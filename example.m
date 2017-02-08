@@ -13,10 +13,10 @@ X = EEG.data;
 % Y is loaded directly from the mat file
 
 % Parameters --------------------------------------------------------------
-res.ncv            = 40;         % number of cross-validation to perform
+res.ncv            = 20;         % number of cross-validation to perform
 res.toolbox        = 'liblinear';
-res.cv_type        = 'holdout';
-res.training_ratio = 0.8;        % percentage of examples used for training the model
+res.cv_type        = 'kfold';
+res.training_ratio = 0.9;        % percentage of examples used for training the model
 res.type           = 7;          % type of regularization 'L1' or 'L2'
 res.norm_scheme    = 'scale';
 res.optimization   = 'off';      % opimization 'on' or 'off'
@@ -42,7 +42,7 @@ for t = 1:res.n_time % loop over time-points
         
         % do the training
         model        = mvpa_train(Xn(itrain,:), Y(itrain), res.toolbox, res.type, res.optimization);
-        model_chance = mvpa_train(shuffle(Xn    (itrain,:)), shuffle(Y(itrain)), res.toolbox, res.type, res.optimization);
+        model_chance = mvpa_train(shuffle(Xn(itrain,:)), shuffle(Y(itrain)), res.toolbox, res.type, res.optimization);
         
         % save weights and activation patterns
         res.weights(:,t,cv) = model.w'; % store the weights

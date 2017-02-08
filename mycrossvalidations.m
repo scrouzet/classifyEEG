@@ -10,7 +10,8 @@ function[res] = mycrossvalidations(Y, res)
 %
 % seb.crouzet@gmail.com | Sep 25 2013
 
-
+if isrow(Y), Y=Y'; end
+    
 switch res.cv_type
     
     case 'holdout' 

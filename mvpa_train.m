@@ -56,6 +56,8 @@ switch toolbox
         
 %     case 'lda'
 %         model = fitcdiscr(X,Y);
+%         [B,FitInfo] = lasso(X,Y);
+%         NBmodel = fitNaiveBayes(X,Y);
 %     case 'mnrfit'
 %         [] = mnrfit(X,Y); % maybe try fitclinear()
 
