@@ -13,12 +13,12 @@ X = EEG.data;
 % Y is loaded directly from the mat file
 
 % Parameters --------------------------------------------------------------
-res.ncv            = 20;         % number of cross-validation to perform
+res.ncv            = 10;         % number of cv to perform ('holdout') / n-fold ('k-fold')
 res.toolbox        = 'liblinear';
-res.cv_type        = 'kfold';
-res.training_ratio = 0.9;        % percentage of examples used for training the model
-res.type           = 7;          % type of regularization 'L1' or 'L2'
-res.norm_scheme    = 'scale';
+res.cv_type        = 'kfold';    % 'holdout' 'kfold' 'leaveoneout'
+res.training_ratio = 0.9;        % percentage of examples used for training the model (only useful if cv_type is 'holdout') 
+res.type           = 7;          % type of model (see Toolbox_options.md for the full list available, depends on res.toolbox)
+res.norm_scheme    = 'scale';    % 'scale' or 'zscore'
 res.optimization   = 'off';      % opimization 'on' or 'off'
 res.conditions     = unique(Y);
 
@@ -60,11 +60,11 @@ for t = 1:res.n_time % loop over time-points
         res.true_label_chance(itest,t,cv) = shuffle(Y(itest)); % store the "true" labels for the ones selected for chance
         
         % TEST (chance level estimated from shuffle labels)
-        [res.accuracy_chance(t,cv), res.predicted_label_chance(itest,t,cv), res.prob_estimates_chance(itest,:,t,cv)] = ...
+        [res.accuracy_chance(t,cv), res.predicted_label_chance(itest,t,cv), res.prob_estimates_chance(itest,t,cv)] = ...
             mvpa_test(shuffle(Xn(itest,:)), res.true_label_chance(itest,t,cv), model_chance, res.toolbox, 'accuracy');
         
     end
     fprintf(1,'Processed time point %d / %d: %f%%\n', t, res.n_time, nanmean(res.accuracy(t,:)));
 end
 
-save('example_results.mat','res');
+save('example_results.mat','res','-v7.3');

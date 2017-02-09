@@ -31,31 +31,46 @@ if numel(size(X)) > 2 % we are in the EEG sliding analysis case
     res.predicted_label = nan(res.n_instance, res.n_time, res.ncv, 'single');
     res.true_label      = nan(res.n_instance, res.n_time, res.ncv, 'single');
     res.accuracy        = nan(res.n_time, res.ncv, 'single');
-    res.accuracy_rand   = nan(res.n_time, res.ncv, 'single');
+    
+    res.accuracy_chance        = nan(res.n_time, res.ncv, 'single');
+    res.predicted_label_chance = nan(res.n_instance, res.n_time, res.ncv, 'single');
+    res.true_label_chance      = nan(res.n_instance, res.n_time, res.ncv, 'single');
     
     if res.n_class==2 % binary classification
-        res.prob_estimates  = nan(res.n_instance, res.n_time, res.ncv, 'single');
-        res.weights         = nan(res.n_features, res.n_time, res.ncv, 'single');
+        res.prob_estimates = nan(res.n_instance, res.n_time, res.ncv, 'single');
+        res.weights        = nan(res.n_features, res.n_time, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.n_time, res.ncv, 'single');
+        res.prob_estimates_chance = nan(res.n_instance, res.n_time, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
-        res.prob_estimates  = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
-        res.weights         = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
+        res.prob_estimates = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
+        res.weights        = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
+        res.prob_estimates_chance = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
     end
     
-    res.best_lambda     = nan(res.n_time, res.ncv, 'single');
+%    res.actpat      = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
+    res.best_lambda = nan(res.n_time, res.ncv, 'single');
     
 elseif numel(size(X)) == 2
     
     res.predicted_label = nan(res.n_instance, res.ncv, 'single');
     res.true_label      = nan(res.n_instance, res.ncv, 'single');
     res.accuracy        = nan(1, res.ncv, 'single');
-    res.accuracy_rand   = nan(1, res.ncv, 'single');
+    
+    res.accuracy_chance   = nan(1, res.ncv, 'single');
+    res.true_label_chance = nan(res.n_instance, res.ncv, 'single');
+    res.predicted_label_chance = nan(res.n_instance, res.ncv, 'single');
     
     if res.n_class==2 % binary classification
-        res.prob_estimates  = nan(res.n_instance, res.ncv, 'single');
-        res.weights         = nan(res.n_features, res.ncv, 'single');
+        res.prob_estimates = nan(res.n_instance, res.ncv, 'single');
+        res.weights        = nan(res.n_features, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.ncv, 'single');
+        res.prob_estimates_chance  = nan(res.n_instance, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
-        res.prob_estimates  = nan(res.n_instance, res.n_class, res.ncv, 'single');
-        res.weights         = nan(res.n_features, res.n_class, res.ncv, 'single');
+        res.prob_estimates = nan(res.n_instance, res.n_class, res.ncv, 'single');
+        res.weights        = nan(res.n_features, res.n_class, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.n_class, res.ncv, 'single');
+        res.prob_estimates_chance  = nan(res.n_instance, res.n_class, res.ncv, 'single');
     end
     
     res.best_lambda     = nan(1, res.ncv, 'single');

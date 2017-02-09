@@ -19,7 +19,7 @@ if isrow(Ytest),  Ytest  = Ytest'; end
 
 switch toolbox
     case 'liblinear'
-        [predicted_label, accuracy, prob_estimates] = predict(Ytest, sparse(double(Xtest)), model);
+        [predicted_label, accuracy, prob_estimates] = predict(double(Ytest), sparse(double(Xtest)), model);
     case 'libsvm'
         [predicted_label, accuracy, prob_estimates] = svmpredict(Ytest, Xtest, model);
 %     case 'lda'
