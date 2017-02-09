@@ -15,11 +15,7 @@ elseif numel(size(X)) == 2
     res.n_instance = size(X,2);
 end
 
-res.freq_table = tabulate(Y);
-res.n_min      = min(res.freq_table(:,2));
-
 if strcmp(res.cv_type,'leaveoneout')
-    %res.ncv = res.n_min;
     res.ncv = res.n_instance;
 end
 
@@ -39,7 +35,7 @@ if numel(size(X)) > 2 % we are in the EEG sliding analysis case
     if res.n_class==2 % binary classification
         res.prob_estimates = nan(res.n_instance, res.n_time, res.ncv, 'single');
         res.weights        = nan(res.n_features, res.n_time, res.ncv, 'single');
-        res.actpat         = nan(res.n_features, res.n_time, res.ncv, 'single');
+        res.actpat          = nan(res.n_features, res.n_time, res.ncv, 'single');
         res.prob_estimates_chance = nan(res.n_instance, res.n_time, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
         res.prob_estimates = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
@@ -47,8 +43,6 @@ if numel(size(X)) > 2 % we are in the EEG sliding analysis case
         res.actpat         = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
         res.prob_estimates_chance = nan(res.n_instance, res.n_class, res.n_time, res.ncv, 'single');
     end
-    
-%    res.actpat      = nan(res.n_features, res.n_class, res.n_time, res.ncv, 'single');
     res.best_lambda = nan(res.n_time, res.ncv, 'single');
     
 elseif numel(size(X)) == 2
@@ -64,18 +58,13 @@ elseif numel(size(X)) == 2
     if res.n_class==2 % binary classification
         res.prob_estimates = nan(res.n_instance, res.ncv, 'single');
         res.weights        = nan(res.n_features, res.ncv, 'single');
-        res.actpat         = nan(res.n_features, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.ncv, 'single');    
         res.prob_estimates_chance  = nan(res.n_instance, res.ncv, 'single');
     elseif res.n_class>2 % multiclass
         res.prob_estimates = nan(res.n_instance, res.n_class, res.ncv, 'single');
         res.weights        = nan(res.n_features, res.n_class, res.ncv, 'single');
-        res.actpat         = nan(res.n_features, res.n_class, res.ncv, 'single');
+        res.actpat         = nan(res.n_features, res.n_class, res.ncv, 'single');    
         res.prob_estimates_chance  = nan(res.n_instance, res.n_class, res.ncv, 'single');
     end
-    
-    res.best_lambda     = nan(1, res.ncv, 'single');
+    res.best_lambda = nan(1, res.ncv, 'single');
 end
-
-% Initialiwze the CV matrices
-res.itrain          = false(res.n_instance, res.ncv); % logical array
-res.itest           = false(res.n_instance, res.ncv); % logical array
