@@ -33,13 +33,13 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 I included 3 examples :
 
 - example.m: standard example of time-resolved MVPA on EEG in which an "immediate" classifier is trained at each time-point (i.e. 64 dimensions if 64 channels).
-<img src="/example.png" width="500">
+<img src="/example.png" width="600">
 
 - example_integration.m: same as example.m but the classification is integrated over a time-window (i.e. if integrating over 10 previous timepoints, then 64*10=640 dimensions).
-![example decoding with integration over time plot](/example_integration.png)
+<img src="/example_integration.png" width="600">
 
 - example_template.m: training and testing on all possible combinations of timepoints (). See Crouzet et al. 2015 for an example of results.
-![example neural template plot](/example_template.png)
+<img src="/example_template.png" width="600">
 
 # TODO LIST:
 - example script to check that sufficient number of training example - decoding accuracy function of nb of training example
