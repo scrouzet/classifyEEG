@@ -10,3 +10,4 @@ h = imagesc(res.times,res.times, dec_acc, [40 75]); hold on
 axis xy square
 xlabel('Train time (ms)');
 ylabel('Test time (ms)');
+print('example_template','-dpng')

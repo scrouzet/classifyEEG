@@ -25,7 +25,7 @@ ylabel('Decoding accuracy (%)');
 title('Decoding time-course');
 xlim([-200 600]);
 ylim([40 90]);
-
+print('example','-dpng');
 
 % -------------------------------------------------------------------------
 % plot cross-validation matrix and Y label vector

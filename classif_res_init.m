@@ -6,10 +6,23 @@ function[res] = classif_res_init(X,Y,res)
 labels = unique(Y);
 
 res.n_class    = length(labels);
-res.n_features = size(X,1);
+
 
 if numel(size(X)) > 2 % we are in the EEG sliding analysis case
-    res.n_time     = size(X,2);
+    if isfield(res,'integrat_win')
+        if res.integrat_win>1
+            res.intwin = round(res.integrat_win/(res.times(2) - res.times(1)));
+            res.n_time = size(X,2)-(res.intwin-1);
+            res.times  = res.times(res.intwin:end);
+            res.n_features = size(X,1)*res.intwin;
+        else
+            res.n_time = size(X,2);
+            res.n_features = size(X,1);
+        end
+    else
+        res.n_time     = size(X,2);
+        res.n_features = size(X,1);
+    end
     res.n_instance = size(X,3);
 elseif numel(size(X)) == 2
     res.n_instance = size(X,2);

@@ -12,12 +12,6 @@ Cauchoix*, M., Crouzet*, S.M., Fize, D., & Serre T. (2016). Fast ventral stream 
 
 If you use it, please cite one of these.
 
-### What does multivariate analysis means?
-These kind of tools can usually also be refered to as pattern recognition, MVPA (MultiVariate Pattern Analysis) or decoding. More generally, multivariate analyses can usually be divided in two types (definitions from the scikit-learn website):
-- classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
-- regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
-
-
 ### Dependencies:
 - [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/): compiled and added to the MATLAB path
 - [EEGLAB](http://sccn.ucsd.edu/eeglab/): in the MATLAB path, but only used for plotting functions
@@ -34,6 +28,19 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 3. Add this directory to the MATLAB path.
 4. Install the necessary dependencies (-> [LIBLINEAR](http://www.csie.ntu.edu.tw/~cjlin/liblinear/))
 
+### Example use
+
+I included 3 examples :
+
+- example.m: standard example of time-resolved MVPA on EEG in which an "immediate" classifier is trained at each time-point (i.e. 64 dimensions if 64 channels).
+![example decoding plot](/example.png)
+
+- example_integration.m: same as example.m but the classification is integrated over a time-window (i.e. if integrating over 10 previous timepoints, then 64*10=640 dimensions).
+![example decoding with integration over time plot](/example_integration_.png)
+
+- example_template.m: training and testing on all possible combinations of timepoints (). See Crouzet et al. 2015 for an example of results.
+![example neural template plot](/example_template_.png)
+
 # TODO LIST:
 - example script to check that sufficient number of training example - decoding accuracy function of nb of training example
 - function to add selectivity bar on top of a decoding accuracy curve
@@ -42,6 +49,12 @@ Delorme A & Makeig S (2004) EEGLAB: an open source toolbox for analysis of singl
 - write a proper tutorial
 - integrate trial averaging (taking groups of 3 trials could allow to get 20% more accuracy \cite{Isik2013})
 - Temporal cross-decoding = neural template -> train and test on all possible combination of time-points
+
+
+### What does multivariate analysis means?
+These kind of tools can usually also be refered to as pattern recognition, MVPA (MultiVariate Pattern Analysis) or decoding. More generally, multivariate analyses can usually be divided in two types (definitions from the scikit-learn website):
+- classification: samples belong to two or more classes and we want to learn from already labeled data how to predict the class of unlabeled data. An example of classification problem would be the handwritten digit recognition example, in which the aim is to assign each input vector to one of a finite number of discrete categories. Another way to think of classification is as a discrete (as opposed to continuous) form of supervised learning where one has a limited number of categories and for each of the n samples provided, one is to try to label them with the correct category or class.
+- regression: if the desired output consists of one or more continuous variables, then the task is called regression. An example of a regression problem would be the prediction of the length of a salmon as a function of its age and weight.
 
 ## Sliding-time-window analysis
 A new classifier is trained and tested for each time point. This sliding time window approach is used to study the emergence and time-course of categorical information in the signal.
